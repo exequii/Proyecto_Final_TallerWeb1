@@ -1,0 +1,29 @@
+Codigo de Mockito.
+
+Mockito lo usamos para mantener los test unitarios y no mezclar las capas de controlador / servicio / repositorio.
+Nos permite invocar a la clase "mockeandola" para poder acceder a sus funcionalidades.
+
+-- Ejemplo de como invocar un mock:
+    private RepositorioUsuario repositorioUsuario = mock(RepositorioUsuario.class);
+    private ServicioLogin servicioLogin = new ServicioLoginImpl(repositorioUsuario);
+
+
+-- Ejemplo de utilizacion de when con mockito:
+	when(repositorioUsuario.buscar(email)).thenReturn(new Usuario());
+/* Basicamente me dice cuando repositorio usuario busque el mail que le paso por parametro, me debe devolver lo que le paso por parametro en el thenReturn */
+
+-- Ejemplo de la utilizacion de verify con mockito cuando hay llamados:
+	verify(repositorioUsuario, times(1)).guardar(any());
+/* Verifica si en repositorioUsuario, se llamo el metodo guardar almenos una vez, en este caso con cualquier cosa como parametro por eso se pone any() */
+/* Para que esto de verde, en el WHEN tuvimos que realizar un registro y que se realice sin problemas/excepciones */
+
+-- Ejemplo de la utilizacion de verify con mockito cuando no hay llamados:
+	verify(repositorioUsuario, never()).guardar(any());
+/* Verifica si en repositorioUsuario,no se llamo el metodo guardar, en este caso con cualquier cosa como parametro por eso se pone any() */
+/* Para que esto de verde, en el WHEN tuvimos que realizar un registro y que de una excepcion para que no llegue a ejecutarse el metodo guardar del repositorio*/
+
+
+-- Ejemplo de utilizacion de doThrow con un mock
+        doThrow(Exception.class).when(servicioReserva).guardarReserva(reserva.getCerveceria(),reserva.getCantidadPersonas(),reserva.getHorario(), new Usuario());
+
+-- Acordarse que si esperamos que se ejecute una excepcion en un test Poner (expected = Exception.class)
